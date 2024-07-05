@@ -426,7 +426,7 @@ FodyWeavers.xsd
 *.obj
 
 # Libraries
-#*.lib
+*.lib
 *.a
 *.la
 *.lo
