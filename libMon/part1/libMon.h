@@ -2,7 +2,7 @@
 #ifndef LIBMON
 #define LIBMON
 #define _CRT_SECURE_NO_WARNINGS
-#include "stdemace.h"
+//#include "stdemace.h"
 
 /*
 typedef short S16BIT;

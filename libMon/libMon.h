@@ -2,17 +2,17 @@
 #ifndef LIBMON
 #define LIBMON
 
-#include "stdemace.h"
+//#include "stdemace.h"
+#include <string>
 
 
-/*
 typedef short S16BIT;
 typedef unsigned short U16BIT;
 typedef unsigned int U32BIT;
 typedef struct empty{
-	int count;
+	std::string error = "";
 }MSGSTRUCT;
-*/
+
 
 /*
 	InitMT called Once by application.
@@ -28,6 +28,9 @@ typedef struct empty{
 	Hints:
 	- Examine samples/emacepl/src folder
 */
+/**
+ * modified function : returns the devnum
+ */
 S16BIT InitMT(S16BIT devNum);
 
 
@@ -82,4 +85,18 @@ S16BIT GetMTMsgErrCount(S16BIT devNum, unsigned int* pMsgErrCount);
 */
 void InitServer(char* szListenIPAddr, unsigned short listenPort);
 
+
+/*
+* simulated function
+* returns a S16BIT corresponding to the device number
+*/
+S16BIT aceInitialize2(S16BIT devnum, S16BIT a, S16BIT b, S16BIT c, S16BIT d, S16BIT e);
+
+S16BIT aceMTGetStkMsgDecoded2(S16BIT devnum, MSGSTRUCT* msg, S16BIT a, S16BIT b);
+
+
 #endif
+
+
+
+

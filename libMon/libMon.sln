@@ -7,6 +7,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libMon", "libMon.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libMonClient", "..\libMonClient\libMonClient.vcxproj", "{16598A89-A450-4E17-9C1F-DC95430704E5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CppUnitTest", "..\CppUnitTest\CppUnitTest.vcxproj", "{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}"
+	ProjectSection(ProjectDependencies) = postProject
+		{100896E9-CF4D-4CDC-8764-D7034D2099F6} = {100896E9-CF4D-4CDC-8764-D7034D2099F6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +36,14 @@ Global
 		{16598A89-A450-4E17-9C1F-DC95430704E5}.Release|x64.Build.0 = Release|x64
 		{16598A89-A450-4E17-9C1F-DC95430704E5}.Release|x86.ActiveCfg = Release|Win32
 		{16598A89-A450-4E17-9C1F-DC95430704E5}.Release|x86.Build.0 = Release|Win32
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Debug|x64.ActiveCfg = Debug|x64
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Debug|x64.Build.0 = Debug|x64
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Debug|x86.ActiveCfg = Debug|Win32
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Debug|x86.Build.0 = Debug|Win32
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Release|x64.ActiveCfg = Release|x64
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Release|x64.Build.0 = Release|x64
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Release|x86.ActiveCfg = Release|Win32
+		{D89C4D30-1DA0-48F1-B0E2-BC2FEAE8E820}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

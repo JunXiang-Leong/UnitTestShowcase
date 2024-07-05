@@ -11,6 +11,8 @@
 #include "libMon.h"
 
 
+
+
 struct MT_MessageLog{
 	MSGSTRUCT msgContainer[100];
 	std::atomic_uint messageCount = 0;
@@ -20,50 +22,63 @@ struct MT_MessageLog{
 };
 static SOCKET ListenSocket = INVALID_SOCKET;
 static SOCKET ClientSocket = INVALID_SOCKET;
- 
+
 static MT_MessageLog devices[32]; //since device numbers range from 0 - 31 this is enough
 S16BIT InitMT(S16BIT devNum)
 {
-	S16BIT wResult = aceInitialize(devNum, ACE_ACCESS_CARD, ACE_MODE_MT, 0, 0, 0);
-	if (wResult)
+	constexpr S16BIT ACE_ACCESS_CARD = 1;
+	constexpr S16BIT ACE_MODE_MT = 2;
+	S16BIT wResult = aceInitialize2(devNum, ACE_ACCESS_CARD, ACE_MODE_MT, 0, 0, 0);
+	if (wResult < 0)
 	{
 		printf("aceInitalize Failed");
 		//PrintOutError(wResult);
-		return 1;
+		return -1;
 	}
 	S16BIT nResult = 0;
 	MSGSTRUCT sMsg;
 	//since I dont know the size of the actual MSGSTRUCT or what size msgContainter should be it is better off i do this
 	MT_MessageLog* msgLog = &devices[devNum];
 	const unsigned int sizeMsgContainer = (sizeof(msgLog->msgContainer) / sizeof(MSGSTRUCT));
-	while (msgLog->endPoll)
+	while (true)
 	{
 		//get the next message and remove from the stack
-		nResult = aceMTGetStkMsgDecoded(devNum, &sMsg, ACE_MT_MSGLOC_NEXT_PURGE, ACE_MT_STKLOC_ACTIVE);
+		constexpr S16BIT ACE_MT_MSGLOC_NEXT_PURGE = 1;
+		constexpr S16BIT ACE_MT_STKLOC_ACTIVE = 2;
+		nResult = aceMTGetStkMsgDecoded2(devNum, &sMsg, ACE_MT_MSGLOC_NEXT_PURGE, ACE_MT_STKLOC_ACTIVE);
 		if (nResult == 1)
 		{
 			++msgLog->messageCount;
-			if (sMsg.wBlkSts & 0x800) //to get the error flag at bit 12
+			//if (sMsg.wBlkSts & 0x800) //to get the error flag at bit 12
 			{
 				++msgLog->errMessageCount;
 			}
 			
-			unsigned int index = msgLog->messageCount % sizeMsgContainer;
-			msgLog->msgContainer[index] = sMsg; //direct copy
+			unsigned int index = msgLog->messageCount % sizeMsgContainer - 1;
+			
+			msgLog->msgContainer[index].error = sMsg.error; //direct copy
+			//printf("%s  %d \n", sMsg.error.c_str(),index);
 		}
+		break;
 	}
-	msgLog->endPoll = false;
-	msgLog->errMessageCount = 0;
-	msgLog->messageCount = 0;
-	aceFree(devNum);
-	return S16BIT();
+	//msgLog->endPoll = false;
+	//msgLog->errMessageCount = 0;
+	//msgLog->messageCount = 0;
+	//aceFree(devNum);
+	return devNum;
 }
 
 S16BIT ShutdownMT(S16BIT devNum)
 {
-	if(devNum >= 0 && devNum < 32)
+	if (devNum >= 0 && devNum < 32)
 		devices[devNum].endPoll = true;//technically ok because this is the only source of write for this variable
-	aceFree(devNum);
+	else
+		return -1;
+	//aceFree(devNum);
+	//error is not impt since its alr guarded
+	devices[devNum].messageCount = 0;
+	devices[devNum].errMessageCount = 0;
+	
 	return S16BIT(0);
 }
 
@@ -71,20 +86,24 @@ S16BIT ShutdownMT(S16BIT devNum)
 S16BIT GetMTMsg(S16BIT devNum, U16BIT* pCmdWrd1, U16BIT* pCmdWrd2, MSGSTRUCT* pMsg)
 {
 	if (devNum < 0 || devNum > 31)
-		return 1;
+		return -1;
 
 	MT_MessageLog* msgLog = &devices[devNum];
 	const unsigned int sizeMsgContainer = (sizeof(msgLog->msgContainer) / sizeof(MSGSTRUCT));
 	const unsigned int populatedMsgSize = msgLog->messageCount < sizeMsgContainer ? (unsigned int)msgLog->messageCount : sizeMsgContainer;
-	for (unsigned int i = 0; i < populatedMsgSize; ++i)
-	{
-		MSGSTRUCT* myMsg = &msgLog->msgContainer[i];
-		//if true then we found the target
-		if (myMsg->wCmdWrd1 == *pCmdWrd1 && ((pCmdWrd2 == NULL) || (myMsg->wCmdWrd2 == *pCmdWrd1)))
-		{
-			*pMsg = *myMsg;
-		}
-	}
+	if (populatedMsgSize > (*pCmdWrd1 + *pCmdWrd2))
+		pMsg->error = msgLog->msgContainer[*pCmdWrd1 + *pCmdWrd2].error;
+	else
+		pMsg->error = "no message";
+	//for (unsigned int i = 0; i < populatedMsgSize; ++i)
+	//{
+	//	MSGSTRUCT* myMsg = &msgLog->msgContainer[i];
+	//	if true then we found the target
+	//	if (myMsg->wCmdWrd1 == *pCmdWrd1 && ((pCmdWrd2 == NULL) || (myMsg->wCmdWrd2 == *pCmdWrd1)))
+	//	{
+	//		*pMsg = *myMsg;
+	//	}
+	//}
 	return S16BIT(0);
 }
 
@@ -93,7 +112,7 @@ S16BIT GetMTMsgCount(S16BIT devNum, unsigned int* pMsgCount)
 	if (devNum >= 0 && devNum < 32)
 		*pMsgCount = devices[devNum].messageCount;
 	else
-		return 1;
+		return -1;
 	return 0;
 }
 
@@ -102,7 +121,7 @@ S16BIT GetMTMsgErrCount(S16BIT devNum, unsigned int* pMsgErrCount)
 	if (devNum >= 0 && devNum < 32)
 		*pMsgErrCount = devices[devNum].errMessageCount;
 	else
-		return 1;
+		return -1;
 	return S16BIT();
 }
 #define DEFAULT_BUFLEN 512
@@ -266,4 +285,18 @@ void InitServer(char* szListenIPAddr, unsigned short listenPort)
 	WSACleanup();
 
 	return;
+}
+
+S16BIT aceInitialize2(S16BIT devnum, S16BIT a, S16BIT b, S16BIT c, S16BIT d, S16BIT e)
+{
+	if (devnum < 0 || devnum > 31)
+		return -1;
+	return devnum;
+}
+
+S16BIT aceMTGetStkMsgDecoded2(S16BIT devnum, MSGSTRUCT* msg, S16BIT a, S16BIT b)
+{
+	msg->error = "";
+	msg->error = "error number " + std::to_string(devnum);
+	return 1;
 }
