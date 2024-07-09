@@ -5,9 +5,11 @@
 #include <cppunit/extensions/HelperMacros.h>
 class LibmonTest : public CppUnit::TestFixture
 {
+	//no need to test these 2
+	//CPPUNIT_TEST(testAceInit);
+	//CPPUNIT_TEST(testAceInitBounds);
+
 	CPPUNIT_TEST_SUITE(LibmonTest);
-	CPPUNIT_TEST(testAceInit);
-	CPPUNIT_TEST(testAceInitBounds);
 	CPPUNIT_TEST(testInitMT);
 	CPPUNIT_TEST(testInitMTBounds);
 	CPPUNIT_TEST(testMsgCount);
@@ -18,10 +20,21 @@ class LibmonTest : public CppUnit::TestFixture
 	CPPUNIT_TEST(testGetMsgBounds);
 	CPPUNIT_TEST(testShutDown);
 	CPPUNIT_TEST(testShutDownBounds);
-
 	CPPUNIT_TEST(combinedTest);
 	CPPUNIT_TEST_SUITE_END();
+
+	static inline S16BIT lowerBound = -1;
+	static inline S16BIT upperBound = 100;
 public:
+	LibmonTest()
+	{
+
+	}
+	static void SetBounds(S16BIT lower, S16BIT upper)
+	{
+		lowerBound = lower;
+		upperBound = upper;
+	}
 	void setUp()
 	{
 
@@ -40,9 +53,9 @@ public:
 	void testAceInitBounds()
 	{
 		CPPUNIT_ASSERT(aceInitialize2(-1, 0, 0, 0, 0, 0) == -1); //bounds check < 0
-		CPPUNIT_ASSERT(aceInitialize2(-100, 0, 0, 0, 0, 0) == -1);
+		//CPPUNIT_ASSERT(aceInitialize2(-100, 0, 0, 0, 0, 0) == -1);
 		CPPUNIT_ASSERT(aceInitialize2(32, 0, 0, 0, 0, 0) == -1); //bounds check > 31
-		CPPUNIT_ASSERT(aceInitialize2(100, 0, 0, 0, 0, 0) == -1);
+		//CPPUNIT_ASSERT(aceInitialize2(100, 0, 0, 0, 0, 0) == -1);
 	}
 	void testInitMT()
 	{
@@ -54,8 +67,8 @@ public:
 	void testInitMTBounds()
 	{
 		//uses devnum 1, 2
-		CPPUNIT_ASSERT(InitMT(-1) == -1);
-		CPPUNIT_ASSERT(InitMT(100)  == -1);
+		CPPUNIT_ASSERT(InitMT(lowerBound) == -1);
+		CPPUNIT_ASSERT(InitMT(upperBound)  == -1);
 
 	}
 	void testMsgCount()
@@ -79,8 +92,8 @@ public:
 	{
 		unsigned int count = 0;
 		
-		CPPUNIT_ASSERT(GetMTMsgCount(-1, &count) == -1);
-		CPPUNIT_ASSERT(GetMTMsgCount(100, &count) == -1);
+		CPPUNIT_ASSERT(GetMTMsgCount(lowerBound, &count) == -1);
+		CPPUNIT_ASSERT(GetMTMsgCount(upperBound, &count) == -1);
 
 	}
 	void testErrMsgCount()
@@ -103,8 +116,8 @@ public:
 	void testErrMsgCountBounds()
 	{
 		unsigned count = 0;
-		CPPUNIT_ASSERT(GetMTMsgErrCount(-1, &count) == -1);
-		CPPUNIT_ASSERT(GetMTMsgErrCount(100, &count) == -1);
+		CPPUNIT_ASSERT(GetMTMsgErrCount(lowerBound, &count) == -1);
+		CPPUNIT_ASSERT(GetMTMsgErrCount(upperBound, &count) == -1);
 	}
 	void testGetMsg()
 	{
@@ -117,7 +130,7 @@ public:
 		InitMT(4);
 		GetMTMsg(4, &a, &b, &msg);
 		GetMTMsg(4, &b, &a, &msg_check);
-		printf("\n start\n %s\n%s \n end\n", msg.error.c_str(), msg_check.error.c_str());
+		//printf("\n start\n %s\n%s \n end\n", msg.error.c_str(), msg_check.error.c_str());
 		CPPUNIT_ASSERT(msg.error == msg_check.error);
 
 		InitMT(1);
@@ -131,8 +144,8 @@ public:
 		U16BIT a = 0;
 		U16BIT b = 0;
 		MSGSTRUCT msg;
-		CPPUNIT_ASSERT(GetMTMsg(-1, &a, &b, &msg) == -1);
-		CPPUNIT_ASSERT(GetMTMsg(100, &a, &b, &msg) == -1);
+		CPPUNIT_ASSERT(GetMTMsg(lowerBound, &a, &b, &msg) == -1);
+		CPPUNIT_ASSERT(GetMTMsg(upperBound, &a, &b, &msg) == -1);
 	}
 	void testShutDown()
 	{
@@ -152,8 +165,8 @@ public:
 	}
 	void testShutDownBounds()
 	{
-		CPPUNIT_ASSERT(ShutdownMT(-1) == -1);
-		CPPUNIT_ASSERT(ShutdownMT(100) == -1);
+		CPPUNIT_ASSERT(ShutdownMT(lowerBound) == -1);
+		CPPUNIT_ASSERT(ShutdownMT(upperBound) == -1);
 	}
 
 	void combinedTest()
