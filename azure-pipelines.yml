@@ -8,6 +8,6 @@ pool:
 steps:
 - task: MSBuild@1
   inputs:
-    solution: '**/*.sln'
+    solution: '**/libMon/*.sln'
     msbuildArchitecture: 'x64'
     platform: 'Debug'
