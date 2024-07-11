@@ -10,4 +10,5 @@ steps:
   inputs:
     solution: '**/libMon/*.sln'
     msbuildArchitecture: 'x64'
-    platform: 'Debug'
+    configuration: 'Debug'
+    
