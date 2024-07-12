@@ -14,3 +14,14 @@ steps:
     configuration: 'Debug'
     clean: true
     msbuildArchitecture: 'x64'
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Test Start
+      
+      cd libMon\x64\debug\
+      
+      CppUnitTest.exe -1 32 -100 100
+      
+      echo Test Done
+    failOnStderr: true
