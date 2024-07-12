@@ -13,7 +13,7 @@ steps:
     platform: 'x64'
     configuration: 'Debug'
     msbuildArchitecture: 'x64'
-    msbuildArgs: /p:OutDir=$(base-output-directory)
+    msbuildLocationMethod: $(Build.StagingDirectory)
 
 - task: CmdLine@2
   inputs:
