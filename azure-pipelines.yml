@@ -19,7 +19,9 @@ steps:
     script: |
       echo Test Start
       
-      cd "libMon\x64\debug\"
+      cd libMon
+      cd x64
+      cd Debug
       
       CppUnitTest.exe -1 32 -100 100
       
