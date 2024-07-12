@@ -19,6 +19,7 @@ steps:
     script: |
       echo Test Start
       ls
+      cd CppUnitTest
       CppUnitTest.exe -1 32 -100 100
       
       echo Test Done
