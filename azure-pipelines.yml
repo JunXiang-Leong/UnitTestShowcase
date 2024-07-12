@@ -3,7 +3,7 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 
 steps:
@@ -20,8 +20,6 @@ steps:
     script: |
       echo Test Start 
 
-      echo $(Build.SourcesDirectory)
-      cd $(Build.SourcesDirectory)
       ls
 
       cd libMon
