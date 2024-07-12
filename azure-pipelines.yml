@@ -18,10 +18,7 @@ steps:
   inputs:
     script: |
       echo Test Start
-      
-      cd libMon
       ls
-      
       CppUnitTest.exe -1 32 -100 100
       
       echo Test Done
