@@ -20,7 +20,9 @@ steps:
       echo Test Start 
       echo $(Build.SourcesDirectory)
       cd $(Build.SourcesDirectory)
+      ls
       cd libMon
+      ls
       cd x64
       cd Debug
     
