@@ -3,7 +3,7 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 
@@ -11,10 +11,10 @@ steps:
   inputs:
     solution: '**libMon\*.sln'
     vsVersion: '16.0'
-    msbuildArgs: '''/p:OutDir=$(Build.ArtifactStagingDirectory)'''
     platform: 'x64'
     configuration: 'Debug'
     msbuildArchitecture: 'x64'
+    createLogFile: True
 
 - task: CmdLine@2
   inputs:
