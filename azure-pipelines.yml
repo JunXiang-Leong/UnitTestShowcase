@@ -6,14 +6,15 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: MSBuild@1
+
+- task: VSBuild@1
   inputs:
-    solution: '**\libMon\*.sln'
+    solution: '**libMon\*.sln'
     vsVersion: '16.0'
+    msbuildArgs: '''/p:OutDir=$(Build.ArtifactStagingDirectory)'''
     platform: 'x64'
     configuration: 'Debug'
     msbuildArchitecture: 'x64'
-    msbuildArgs: '/p:OutDir=$(Build.ArtifactStagingDirectory)'
 
 - task: CmdLine@2
   inputs:
