@@ -14,12 +14,6 @@ steps:
     configuration: 'Debug'
     msbuildArchitecture: 'x64'
 
-- powershell: |
-   Write-Host "Show all folder content"
-   Get-ChildItem -Path $(Agent.WorkFolder)\*.* -Recurse -Force
-  errorActionPreference: continue
-  displayName: 'PowerShell Script List folder structure'
-  continueOnError: true
 - task: CmdLine@2
   inputs:
     script: |
@@ -27,7 +21,8 @@ steps:
       echo "$(Build.BinariesDirectory)"
       cd "$(Build.BinariesDirectory)"
       ls
-      cd x64
+      echo $(Build.SourcesDirectory)
+      cd $(Build.SourcesDirectory)
       ls
       CppUnitTest.exe -1 32 -100 100
       
