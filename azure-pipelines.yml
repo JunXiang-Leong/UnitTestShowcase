@@ -20,8 +20,7 @@ steps:
       echo Test Start
       
       cd libMon
-      cd x64
-      cd Debug
+      ls
       
       CppUnitTest.exe -1 32 -100 100
       
