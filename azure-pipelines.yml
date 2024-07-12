@@ -13,17 +13,15 @@ steps:
     platform: 'x64'
     configuration: 'Debug'
     msbuildArchitecture: 'x64'
-    msbuildLocationMethod: $(Build.StagingDirectory)
+    msbuildArgs: '/p:OutDir=$(Build.ArtifactStagingDirectory)'
 
 - task: CmdLine@2
   inputs:
     script: |
       echo Test Start 
-      echo $(Build.BinariesDirectory)
-      cd $(Build.BinariesDirectory)
-      ls
-      echo $(Build.StagingDirectory)
-      cd $(Build.StagingDirectory)
+
+      echo $(Build.ArtifactStagingDirectory)
+      cd $(Build.ArtifactStagingDirectory)
       ls
 
       cd libMon
