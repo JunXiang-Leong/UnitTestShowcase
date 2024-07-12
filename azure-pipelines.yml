@@ -18,8 +18,8 @@ steps:
   inputs:
     script: |
       echo Test Start 
-      echo $(Build.SourcesDirectory)
-      cd $(Build.SourcesDirectory)
+      echo $(Build.ArtifactStagingDirectory)
+      cd $(Build.ArtifactStagingDirectory)
       ls
       cd libMon
       ls
