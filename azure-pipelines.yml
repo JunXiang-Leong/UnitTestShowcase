@@ -11,7 +11,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '**libMon\*.sln'
-    vsVersion: '16.0'
+    vsVersion: '17.0'
     platform: 'x64'
     configuration: 'Debug'
 
@@ -19,14 +19,9 @@ steps:
   inputs:
     script: |
       echo Test Start 
-
-      ls
-
       cd libMon
       cd x64
       cd Debug
-    
-      CppUnitTest.exe -1 32 -100 100
-      
+      CppUnitTest.exe -1 32 -100 100 1 1
       echo Test Done
     failOnStderr: true
