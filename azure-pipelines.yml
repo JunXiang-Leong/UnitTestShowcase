@@ -18,8 +18,10 @@ steps:
   inputs:
     script: |
       echo Test Start
-      ls
       cd CppUnitTest
+      ls
+      cd x64
+      ls
       CppUnitTest.exe -1 32 -100 100
       
       echo Test Done
