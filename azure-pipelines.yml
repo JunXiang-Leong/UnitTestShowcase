@@ -18,12 +18,12 @@ steps:
   inputs:
     script: |
       echo Test Start 
-      echo "$(Build.BinariesDirectory)"
-      cd "$(Build.BinariesDirectory)"
-      ls
       echo $(Build.SourcesDirectory)
       cd $(Build.SourcesDirectory)
-      ls
+      cd libMon
+      cd x64
+      cd Debug
+    
       CppUnitTest.exe -1 32 -100 100
       
       echo Test Done
