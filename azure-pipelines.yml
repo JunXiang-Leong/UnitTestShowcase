@@ -12,13 +12,13 @@ steps:
     vsVersion: '16.0'
     platform: 'x64'
     configuration: 'Debug'
-    clean: true
     msbuildArchitecture: 'x64'
 - task: CmdLine@2
   inputs:
     script: |
-      echo Test Start
-      cd CppUnitTest
+      echo Test Start 
+      echo "$(Build.BinariesDirectory)"
+      cd "$(Build.BinariesDirectory)"
       ls
       cd x64
       ls
