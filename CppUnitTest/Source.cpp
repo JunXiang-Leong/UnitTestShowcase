@@ -9,7 +9,7 @@ int main()
 	CppUnit::TestFactoryRegistry& registry = CppUnit::TestFactoryRegistry::getRegistry();
 	runner.addTest(registry.makeTest());
 	bool result = runner.run();
-	LibmonTest::SetBounds(-1,32);
+	LibmonTest::SetBounds(11,32);
 	result = runner.run();
 	if (result)
 		printf("all tests passed!\n");

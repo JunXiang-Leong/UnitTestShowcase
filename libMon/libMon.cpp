@@ -31,7 +31,7 @@ S16BIT InitMT(S16BIT devNum)
 	S16BIT wResult = aceInitialize2(devNum, ACE_ACCESS_CARD, ACE_MODE_MT, 0, 0, 0);
 	if (wResult < 0)
 	{
-		printf("aceInitalize Failed");
+		//printf("aceInitalize Failed");
 		//PrintOutError(wResult);
 		return -1;
 	}
